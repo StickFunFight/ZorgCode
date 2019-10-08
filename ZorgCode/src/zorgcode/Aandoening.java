@@ -44,9 +44,9 @@ public class Aandoening {
             System.out.println(e);
             return false;
         }
-        
+
     }
-           public ArrayList<String> GeefNaam()
+           public ArrayList<String> GeefAandoeningNaam()
     {
         try
         {
@@ -59,6 +59,7 @@ public class Aandoening {
                 while(rs.next())
                 {
                     lijstNamen.add(rs.getString("Naam"));
+
                 }
             }
             return lijstNamen;
@@ -67,5 +68,27 @@ public class Aandoening {
              return null;
          }
     } 
+           
+      public ArrayList<String> GeefAandoeningIds()
+    {
+        try
+        {
+            Statement stmt = this.conn.createStatement();
+            ArrayList<String> LijstIds = new ArrayList<String>();
+            ResultSet rs;
+            if (stmt.execute("SELECT id FROM aandoening")) 
+            {
+                rs = stmt.getResultSet();
+                while(rs.next())
+                {
+                    LijstIds.add(rs.getString("id"));
+                }
+            }
+            return LijstIds;
+         }catch(SQLException e)
+         {
+             return null;
+         }
+    }      
     
 }

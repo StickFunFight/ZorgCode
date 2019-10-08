@@ -32,7 +32,6 @@ public class ZorgCode extends Application {
         root.getChildren().add(BtnAandoening);
         
         Scene scene = new Scene(root, 1280, 720);
-        primaryStage.getIcons().add(new Image(getClass().getResource(IconImagePath).toExternalForm()));
         
         primaryStage.setTitle("ZorgCode"); 
         primaryStage.setScene(scene);
