@@ -5,6 +5,7 @@
  */
 package zorgcode;
 
+import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -33,11 +34,10 @@ public class AandoeningCRUD {
         TerugKnop.setLayoutY(600);
         
                 ListView<String> list = new ListView<String>();
-    ObservableList<String> items =FXCollections.observableArrayList (
-    "Single", "Double", "Suite", "Family App");
-    list.setItems(items);
     
-            list.setLayoutX(10);
+
+    
+        list.setLayoutX(10);
         list.setLayoutY(10);
         
         
@@ -63,6 +63,11 @@ public class AandoeningCRUD {
         if(db.connectDb()){
             db.GeefNaam();
             System.out.println(db.GeefNaam());
+            ArrayList<String> AandoeningNaam = db.GeefNaam();
+            ObservableList<String> items = FXCollections.observableArrayList(AandoeningNaam);
+            
+            list.setItems(items);
+            
              
         }
         

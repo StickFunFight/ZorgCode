@@ -53,7 +53,7 @@ public class Aandoening {
             Statement stmt = this.conn.createStatement();
             ArrayList<String> lijstNamen = new ArrayList<String>();
             ResultSet rs;
-            if (stmt.execute("SELECT Naam FROM aandoening")) 
+            if (stmt.execute("SELECT Naam,id FROM aandoening")) 
             {
                 rs = stmt.getResultSet();
                 while(rs.next())
