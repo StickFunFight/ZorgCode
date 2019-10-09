@@ -5,15 +5,13 @@
  */
 package zorgcode;
 
-import java.util.ArrayList;
-import java.util.prefs.Preferences;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -28,6 +26,8 @@ public class AandoeningCRUD {
     
     public AandoeningCRUD(Stage stage, Scene scene){
         
+        TextField TxtNaam = new TextField();
+        TextArea TxtOmschrijving = new TextArea();
         Button TerugKnop = new Button();
         TerugKnop.setText("Terug naar hoofdpagina");
         
@@ -35,22 +35,29 @@ public class AandoeningCRUD {
         TerugKnop.setLayoutX(1000);
         TerugKnop.setLayoutY(600);
         
-        ListView<String> list = new ListView<String>();
+        ListView<EntAanDoening> list = new ListView<EntAanDoening>();
     
         list.setLayoutX(10);
         list.setLayoutY(10);
+        
+        TxtNaam.setLayoutX(500);
+        TxtNaam.setLayoutY(10);
+        TxtNaam.setPrefSize(200, 35);
+        
+        TxtOmschrijving.setLayoutX(500);
+        TxtOmschrijving.setLayoutY(50);
+        TxtOmschrijving.setPrefSize(200, 100);
+        TxtOmschrijving.setWrapText(true);
 
-        root.getChildren().addAll(TerugKnop,list);
+        root.getChildren().addAll(TerugKnop,list, TxtNaam, TxtOmschrijving);
         
         Scene nieuwScene = new Scene(root, 1280, 720);
         stage.setScene(nieuwScene);
 
         TerugKnop.setOnAction(new EventHandler<ActionEvent>() {
-            
             @Override
             public void handle(ActionEvent event) {
                 stage.setScene(scene);
-                
             }
         });
         
@@ -58,16 +65,17 @@ public class AandoeningCRUD {
 
         @Override
         public void handle(MouseEvent event) {
-            System.out.println(list.getSelectionModel().getSelectedItem());
+            EntAanDoening deAandoening = list.getSelectionModel().getSelectedItem();
+            int AID = deAandoening.getId();
+
+            TxtNaam.setText(db.GeefAandoening(AID).Naam);
+             TxtOmschrijving.setText(db.GeefAandoening(AID).Omschrijving);
+            
             }
         });
 
         if(db.connectDb()){
-            db.GeefAandoeningNaam();
-            System.out.println(db.GeefAandoeningNaam());
-            ArrayList<String> AandoeningNaam = db.GeefAandoeningNaam();
-            ObservableList<String> Namen = FXCollections.observableArrayList(AandoeningNaam);
-            list.setItems(Namen); 
+            list.setItems(db.VulLijstAandoening()); 
         }
     }  
 }

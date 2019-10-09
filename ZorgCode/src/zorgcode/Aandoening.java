@@ -10,8 +10,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Date;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -46,20 +46,22 @@ public class Aandoening {
         }
 
     }
-           public ArrayList<String> GeefAandoeningNaam()
+           public ObservableList<EntAanDoening> VulLijstAandoening()
     {
         try
         {
             Statement stmt = this.conn.createStatement();
-            ArrayList<String> lijstNamen = new ArrayList<String>();
+            ObservableList<EntAanDoening> lijstNamen = FXCollections.observableArrayList();
             ResultSet rs;
             if (stmt.execute("SELECT Naam,id FROM aandoening")) 
             {
                 rs = stmt.getResultSet();
                 while(rs.next())
                 {
-                    lijstNamen.add(rs.getString("Naam"));
-
+                    EntAanDoening deAandoening = new EntAanDoening(rs.getInt("id"),rs.getString("Naam"));
+                    lijstNamen.add(deAandoening); 
+                    //Hier word een List gemaakt van Aandoeningen 
+                    //in deze list zitten de naam en het ID
                 }
             }
             return lijstNamen;
@@ -69,26 +71,31 @@ public class Aandoening {
          }
     } 
            
-      public ArrayList<String> GeefAandoeningIds()
+      public Aandoening GeefAandoening(int AID)
     {
+        Aandoening aandoening = new Aandoening();
         try
         {
             Statement stmt = this.conn.createStatement();
-            ArrayList<String> LijstIds = new ArrayList<String>();
             ResultSet rs;
-            if (stmt.execute("SELECT id FROM aandoening")) 
+            if (stmt.execute("SELECT * FROM aandoening Where id =" +AID)) 
             {
                 rs = stmt.getResultSet();
                 while(rs.next())
                 {
-                    LijstIds.add(rs.getString("id"));
+                    aandoening.Naam = rs.getString("Naam");
+                    aandoening.id = rs.getInt("Id");
+                    aandoening.Omschrijving = rs.getString("Omschrijving");
+                    aandoening.ConstateerDatum = rs.getString("ConstateerDatum");
+                    aandoening.Genezen = rs.getBoolean("Genezen");
+                   
                 }
             }
-            return LijstIds;
+            return aandoening;
          }catch(SQLException e)
          {
              return null;
          }
-    }      
+    } 
     
 }
