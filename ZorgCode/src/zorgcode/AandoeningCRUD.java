@@ -5,10 +5,12 @@
  */
 package zorgcode;
 
+import java.time.format.DateTimeFormatter;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -28,6 +30,7 @@ public class AandoeningCRUD {
         
         TextField TxtNaam = new TextField();
         TextArea TxtOmschrijving = new TextArea();
+        DatePicker DpDatum = new DatePicker();
         Button TerugKnop = new Button();
         TerugKnop.setText("Terug naar hoofdpagina");
         
@@ -48,8 +51,13 @@ public class AandoeningCRUD {
         TxtOmschrijving.setLayoutY(50);
         TxtOmschrijving.setPrefSize(200, 100);
         TxtOmschrijving.setWrapText(true);
+        
+        DpDatum.setLayoutX(500);
+        DpDatum.setLayoutY(155);
+        DpDatum.setPrefSize(200, 35);
+        
 
-        root.getChildren().addAll(TerugKnop,list, TxtNaam, TxtOmschrijving);
+        root.getChildren().addAll(TerugKnop,list, TxtNaam, TxtOmschrijving, DpDatum);
         
         Scene nieuwScene = new Scene(root, 1280, 720);
         stage.setScene(nieuwScene);
@@ -67,15 +75,13 @@ public class AandoeningCRUD {
         public void handle(MouseEvent event) {
             EntAanDoening deAandoening = list.getSelectionModel().getSelectedItem();
             int AID = deAandoening.getId();
-
             TxtNaam.setText(db.GeefAandoening(AID).Naam);
-             TxtOmschrijving.setText(db.GeefAandoening(AID).Omschrijving);
-            
+            TxtOmschrijving.setText(db.GeefAandoening(AID).Omschrijving);
             }
         });
 
         if(db.connectDb()){
-            list.setItems(db.VulLijstAandoening()); 
+           list.setItems(db.VulLijstAandoening()); 
         }
     }  
 }

@@ -14,6 +14,16 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class EntAanDoening {
 
+    private String Omschrijving;
+
+    public String getOmschrijving() {
+        return Omschrijving;
+    }
+
+    public void setOmschrijving(String Omschrijving) {
+        this.Omschrijving = Omschrijving;
+    }
+    
     private String naam;
 
     public String getNaam() {
@@ -34,10 +44,11 @@ public class EntAanDoening {
 
     private int id;
 
-    public EntAanDoening(int id, String naam) {
+    public EntAanDoening(int id, String naam, String Omschrijving) {
 
         this.naam = naam;
         this.id = id;
+        this.Omschrijving = Omschrijving;
 
     }
 
@@ -45,4 +56,5 @@ public class EntAanDoening {
     public String toString() {
         return this.naam;
     }
+       
 }

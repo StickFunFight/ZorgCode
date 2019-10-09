@@ -23,14 +23,12 @@ public class Aandoening {
     int id;
     String Naam;
     String Omschrijving;
-    String ConstateerDatum;
     boolean Genezen; 
     
     Aandoening() {
     this.id = 0;
     this.Naam = "";
     this.Omschrijving = "";
-    this.ConstateerDatum = "";
     this.Genezen = false;
   }
     
@@ -58,7 +56,7 @@ public class Aandoening {
                 rs = stmt.getResultSet();
                 while(rs.next())
                 {
-                    EntAanDoening deAandoening = new EntAanDoening(rs.getInt("id"),rs.getString("Naam"));
+                    EntAanDoening deAandoening = new EntAanDoening(rs.getInt("id"),rs.getString("Naam"), "");
                     lijstNamen.add(deAandoening); 
                     //Hier word een List gemaakt van Aandoeningen 
                     //in deze list zitten de naam en het ID
@@ -86,7 +84,6 @@ public class Aandoening {
                     aandoening.Naam = rs.getString("Naam");
                     aandoening.id = rs.getInt("Id");
                     aandoening.Omschrijving = rs.getString("Omschrijving");
-                    aandoening.ConstateerDatum = rs.getString("ConstateerDatum");
                     aandoening.Genezen = rs.getBoolean("Genezen");
                    
                 }
