@@ -17,35 +17,27 @@ import javafx.stage.Stage;
  * @author R. Uijttenboogaard
  */
 public class PatientenCRUD {
-    
-    public PatientenCRUD(Stage stage, Scene scene){
-        
+
+    public PatientenCRUD(Stage stage, Scene scene) {
+
         Button TerugKnop = new Button();
         TerugKnop.setText("Terug naar hoofdpagina");
-        
+
         Pane root = new Pane();
         TerugKnop.setLayoutX(1000);
         TerugKnop.setLayoutY(600);
         root.getChildren().add(TerugKnop);
 
-        
         Scene nieuwScene = new Scene(root, 1280, 720);
         stage.setScene(nieuwScene);
-        
+
         TerugKnop.setOnAction(new EventHandler<ActionEvent>() {
-            
+
             @Override
             public void handle(ActionEvent event) {
                 stage.setScene(scene);
             }
         });
-        
-        
-        
-        
-        
-        
-    
     }
-    
+
 }

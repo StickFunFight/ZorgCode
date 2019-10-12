@@ -23,7 +23,7 @@ public class EntAanDoening {
     public void setOmschrijving(String Omschrijving) {
         this.Omschrijving = Omschrijving;
     }
-    
+
     private String naam;
 
     public String getNaam() {
@@ -56,5 +56,5 @@ public class EntAanDoening {
     public String toString() {
         return this.naam;
     }
-       
+
 }
