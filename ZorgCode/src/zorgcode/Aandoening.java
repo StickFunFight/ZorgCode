@@ -111,6 +111,7 @@ public class Aandoening {
         System.out.println(id);
         try {
             Statement stmt = conn.createStatement();
+            stmt.execute("Delete from Patient_aandoening where AandoeningId = '" + id + "'");
             stmt.execute("Delete from aandoening where id = '" + id + "'");
             return true;
         } catch (SQLException e) {
