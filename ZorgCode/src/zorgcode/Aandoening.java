@@ -25,13 +25,6 @@ public class Aandoening {
     String Omschrijving;
     boolean Genezen;
 
-//    Aandoening() {
-//        this.id = 0;
-//        this.Naam = "";
-//        this.Omschrijving = "";
-//        this.Genezen = false;
-//    }
-
     public boolean connectDb() {
         try {
             this.conn = DriverManager.getConnection("jdbc:mysql://localhost/zorgcode?" + "user=root&password=");
@@ -48,10 +41,10 @@ public class Aandoening {
             Statement stmt = this.conn.createStatement();
             ObservableList<EntAanDoening> lijstNamen = FXCollections.observableArrayList();
             ResultSet rs;
-            if (stmt.execute("SELECT Naam,id FROM aandoening")) {
+            if (stmt.execute("SELECT Naam,id FROM aandoening where Genezen = 0")) {
                 rs = stmt.getResultSet();
                 while (rs.next()) {
-                    EntAanDoening deAandoening = new EntAanDoening(rs.getInt("id"), rs.getString("Naam"), "");
+                    EntAanDoening deAandoening = new EntAanDoening(rs.getInt("id"), rs.getString("Naam"));
                     lijstNamen.add(deAandoening);
                     //Hier word een List gemaakt van Aandoeningen 
                     //in deze list zitten de naam en het ID
@@ -120,4 +113,40 @@ public class Aandoening {
         }
     }
 
+    public ObservableList<EntAanDoening> AandoeningBijPersoon(int PID) {
+        try {
+            Statement stmt = this.conn.createStatement();
+            ObservableList<EntAanDoening> LijstAandoeningenPers = FXCollections.observableArrayList();
+            ResultSet rs;
+            if (stmt.execute("Select `patient_aandoening`.`PatientId`, `patient_aandoening`.`AandoeningId`, `aandoening`.`Naam`\n"
+                    + "from `patient_aandoening`\n"
+                    + "Inner join `aandoening` on `aandoening`.`id` = `patient_aandoening`.`AandoeningId`\n"
+                    + "where patient_aandoening.PatientId = " + PID + "\n"
+                    + "AND aandoening.Genezen = 0;")) {
+                rs = stmt.getResultSet();
+                while (rs.next()) {
+                    EntAanDoening deAandoening = new EntAanDoening(rs.getInt("AandoeningId"), rs.getString("Naam"));
+                    LijstAandoeningenPers.add(deAandoening);
+                    //Hier word een List gemaakt van Aandoeningen bij een persoon
+                    //in deze list zitten de naam en het ID
+                }
+            }
+            return LijstAandoeningenPers;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+        public boolean AandoeningenGenezen(int id) {
+
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.execute("update aandoening set Genezen = 1 where id = " + id);
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+    
 }

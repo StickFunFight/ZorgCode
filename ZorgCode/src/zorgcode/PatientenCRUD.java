@@ -34,6 +34,7 @@ import javafx.stage.Stage;
 public class PatientenCRUD {
 
     Patient db = new Patient();
+    Aandoening ad = new Aandoening();
 
     public PatientenCRUD(Stage stage, Scene scene) {
 
@@ -195,6 +196,10 @@ public class PatientenCRUD {
             }
         });
 
+        //Dit is niet best practice maar het wilde met niet op een andere manier lukken 
+        //ik maak hier een nieuw scherm die ik dan open als een popup scherm
+        //in dit scherm kun je een persoon wijzigen
+        //je kunt er ook zijn aandoeningen inzien en deze op genezen zetten
         BtnWijzig.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -205,7 +210,7 @@ public class PatientenCRUD {
                     Pane pane = new Pane();
                     Stage stage = new Stage();
                     stage.setTitle("Aanpassen");
-                    stage.setScene(new Scene(pane, 225, 500));
+                    stage.setScene(new Scene(pane, 700, 500));
                     stage.getIcons().add(new Image(ZorgCode.class.getResourceAsStream("Icon/images.png")));
                     pane.setStyle("-fx-background-color: #A7b6FF;");
                     stage.show();
@@ -270,7 +275,30 @@ public class PatientenCRUD {
                     BtnVerwijder.setLayoutX(130);
                     BtnVerwijder.setLayoutY(450);
 
-                    pane.getChildren().addAll(AanpassenVoorNaam, AanpassenAchternaam, AanpassenGeboorteDatum, AanpassenLengte, AanpassenGewicht, AanpassenTelefoonNummer, AanpassenNoodNummer, AanpassenExtraNoodNummer, AanpassenAllergieen, AanpassingOpslaan, BtnVerwijder);
+                    ListView<EntAanDoening> LijstAandoeningen = new ListView<EntAanDoening>();
+                    LijstAandoeningen.setLayoutX(400);
+                    LijstAandoeningen.setLayoutY(10);
+                    LijstAandoeningen.setPrefSize(200, 100);
+
+                    Button BtnGenezen = new Button("Genezen");
+                    BtnGenezen.setLayoutX(400);
+                    BtnGenezen.setLayoutY(120);
+
+                    if (ad.connectDb()) {
+                        LijstAandoeningen.setItems((ad.AandoeningBijPersoon(PID)));
+                    }
+
+                    pane.getChildren().addAll(AanpassenVoorNaam, AanpassenAchternaam, AanpassenGeboorteDatum, AanpassenLengte, AanpassenGewicht, AanpassenTelefoonNummer, AanpassenNoodNummer, AanpassenExtraNoodNummer, AanpassenAllergieen, AanpassingOpslaan, BtnVerwijder, LijstAandoeningen, BtnGenezen);
+
+                    BtnGenezen.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            EntAanDoening deAandoening = LijstAandoeningen.getSelectionModel().getSelectedItem();
+                            int AID = deAandoening.getId();   
+                            ad.AandoeningenGenezen(AID);
+                            LijstAandoeningen.setItems((ad.AandoeningBijPersoon(PID)));
+                        }
+                    });
 
                     AanpassingOpslaan.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
@@ -318,6 +346,8 @@ public class PatientenCRUD {
             }
         });
 
+        //Dit is niet best practice maar het wilde met niet op een andere manier lukken 
+        //ik maak hier een nieuw scherm die ik dan open als een popup scherm
         BtnAandoening.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -345,18 +375,18 @@ public class PatientenCRUD {
                     ComboBox<EntAanDoening> cbxAandoeningen = new ComboBox<EntAanDoening>();
                     cbxAandoeningen.setLayoutX(100);
                     cbxAandoeningen.setLayoutY(10);
-                    
-                    if(AD.connectDb()){
+
+                    if (AD.connectDb()) {
                         cbxAandoeningen.getItems().addAll(AD.VulLijstAandoening());
                     }
-                    
-                    pane.getChildren().addAll(LblAandoeningen,cbxAandoeningen, BtnToevoegen);
+
+                    pane.getChildren().addAll(LblAandoeningen, cbxAandoeningen, BtnToevoegen);
 
                     BtnToevoegen.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                         EntAanDoening deAandoening = cbxAandoeningen.getSelectionModel().getSelectedItem();
-                            int AID = deAandoening.getId(); 
+                            EntAanDoening deAandoening = cbxAandoeningen.getSelectionModel().getSelectedItem();
+                            int AID = deAandoening.getId();
                             db.AandoeningToevoegen(PID, AID);
 
                             stage.close();

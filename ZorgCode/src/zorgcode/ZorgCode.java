@@ -31,10 +31,9 @@ public class ZorgCode extends Application {
         Scene scene = new Scene(root, 1280, 720);
         primaryStage.setTitle("ZorgCode");
         primaryStage.setScene(scene);
-        primaryStage.getIcons().add(new Image(ZorgCode.class.getResourceAsStream( "Icon/images.png" ))); 
+        primaryStage.getIcons().add(new Image(ZorgCode.class.getResourceAsStream("Icon/images.png")));
         root.setStyle("-fx-background-color: #8bb3e8;");
         primaryStage.show();
-        
 
         BtnPatient.setOnAction(new EventHandler<ActionEvent>() {
 

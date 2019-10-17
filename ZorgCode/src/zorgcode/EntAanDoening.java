@@ -44,11 +44,10 @@ public class EntAanDoening {
 
     private int id;
 
-    public EntAanDoening(int id, String naam, String Omschrijving) {
+    public EntAanDoening(int id, String naam) {
 
         this.naam = naam;
         this.id = id;
-        this.Omschrijving = Omschrijving;
 
     }
 

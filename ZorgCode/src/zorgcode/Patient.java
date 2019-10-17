@@ -111,6 +111,7 @@ public class Patient {
     public boolean DeletePatient(int id) {
         try {
             Statement stmt = conn.createStatement();
+            stmt.execute("Delete from patient_aandoening where PatientId = '" + id + "'");
             stmt.execute("Delete from patient where Id = '" + id + "'");
             return true;
         } catch (SQLException e) {
@@ -122,12 +123,11 @@ public class Patient {
     public boolean AandoeningToevoegen(int PID, int AID) {
         try {
             Statement stmt = conn.createStatement();
-            stmt.execute("INSERT INTO patient_aandoening VALUES ("+PID+","+AID+" )");
+            stmt.execute("INSERT INTO patient_aandoening VALUES (" + PID + "," + AID + " )");
             return true;
         } catch (SQLException e) {
             System.out.println(e);
             return false;
         }
     }
-
 }
