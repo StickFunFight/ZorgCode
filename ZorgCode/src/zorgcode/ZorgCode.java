@@ -5,12 +5,12 @@
  */
 package zorgcode;
 
-import java.awt.Image;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
@@ -28,12 +28,13 @@ public class ZorgCode extends Application {
         FlowPane root = new FlowPane();
         root.getChildren().add(BtnPatient);
         root.getChildren().add(BtnAandoening);
-
         Scene scene = new Scene(root, 1280, 720);
-
         primaryStage.setTitle("ZorgCode");
         primaryStage.setScene(scene);
+        primaryStage.getIcons().add(new Image(ZorgCode.class.getResourceAsStream( "Icon/images.png" ))); 
+        root.setStyle("-fx-background-color: #8bb3e8;");
         primaryStage.show();
+        
 
         BtnPatient.setOnAction(new EventHandler<ActionEvent>() {
 

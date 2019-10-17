@@ -13,13 +13,18 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 /**
@@ -55,13 +60,14 @@ public class PatientenCRUD {
         Label LblAllergieen = new Label("Allergieën: ");
 
         Pane root = new Pane();
+        root.setStyle("-fx-background-color: #8bb3e8;");
         TerugKnop.setLayoutX(1000);
         TerugKnop.setLayoutY(600);
 
-        BtnOpslaan.setLayoutX(550);
+        BtnOpslaan.setLayoutX(450);
         BtnOpslaan.setLayoutY(450);
 
-        BtnWijzig.setLayoutX(450);
+        BtnWijzig.setLayoutX(10);
         BtnWijzig.setLayoutY(450);
 
         ListView<EntPatient> list = new ListView<EntPatient>();
@@ -125,7 +131,9 @@ public class PatientenCRUD {
         TxtAllergieen.setPrefSize(200, 100);
         TxtAllergieen.setWrapText(true);
 
-        root.getChildren().addAll(TerugKnop, list, TxtVoorNaam, LblVoornaam, TxtAchternaam, LblAchternaam, DpGeboorteDatum, LblGeboorteDatum, TxtLengte, LblLengte, TxtGewicht, LblGewicht, LblTelefoonNummer, TxtTelefoonNummer, LblNoodNummer, TxtNoodNummer, LblExtraNoodNummer, TxtExtraNoodNummer, LblAllergieen, TxtAllergieen, BtnOpslaan, BtnWijzig);
+        ComboBox<EntPatient> cbxAandoeningen = new ComboBox<EntPatient>();
+
+        root.getChildren().addAll(cbxAandoeningen, TerugKnop, list, TxtVoorNaam, LblVoornaam, TxtAchternaam, LblAchternaam, DpGeboorteDatum, LblGeboorteDatum, TxtLengte, LblLengte, TxtGewicht, LblGewicht, LblTelefoonNummer, TxtTelefoonNummer, LblNoodNummer, TxtNoodNummer, LblExtraNoodNummer, TxtExtraNoodNummer, LblAllergieen, TxtAllergieen, BtnOpslaan, BtnWijzig);
 
         list.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -196,6 +204,8 @@ public class PatientenCRUD {
                     Stage stage = new Stage();
                     stage.setTitle("Aanpassen");
                     stage.setScene(new Scene(pane, 225, 500));
+                    stage.getIcons().add(new Image(ZorgCode.class.getResourceAsStream("Icon/images.png")));
+                    pane.setStyle("-fx-background-color: #A7b6FF;");
                     stage.show();
 
                     TextField AanpassenVoorNaam = new TextField();
@@ -254,7 +264,11 @@ public class PatientenCRUD {
                     AanpassingOpslaan.setLayoutX(10);
                     AanpassingOpslaan.setLayoutY(450);
 
-                    pane.getChildren().addAll(AanpassenVoorNaam, AanpassenAchternaam, AanpassenGeboorteDatum, AanpassenLengte, AanpassenGewicht, AanpassenTelefoonNummer, AanpassenNoodNummer, AanpassenExtraNoodNummer, AanpassenAllergieen, AanpassingOpslaan);
+                    Button BtnVerwijder = new Button("Verwijder");
+                    BtnVerwijder.setLayoutX(130);
+                    BtnVerwijder.setLayoutY(450);
+
+                    pane.getChildren().addAll(AanpassenVoorNaam, AanpassenAchternaam, AanpassenGeboorteDatum, AanpassenLengte, AanpassenGewicht, AanpassenTelefoonNummer, AanpassenNoodNummer, AanpassenExtraNoodNummer, AanpassenAllergieen, AanpassingOpslaan, BtnVerwijder);
 
                     AanpassingOpslaan.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
@@ -277,11 +291,21 @@ public class PatientenCRUD {
                             } catch (Exception e) {
                                 Alert alert = new Alert(Alert.AlertType.WARNING);
                                 alert.setTitle("Er Ging iets fout");
-                                alert.setContentText("" +e);
+                                alert.setContentText("" + e);
                                 alert.showAndWait();
                             }
                         }
                     });
+                    BtnVerwijder.setOnAction(new EventHandler<ActionEvent>() {
+
+                        @Override
+                        public void handle(ActionEvent event) {
+                            db.DeletePatient(PID);
+                            list.setItems(db.VulLijstPatienten());
+                            stage.close();
+                        }
+                    });
+
                 } catch (Exception e) {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Selecteer een Item");
@@ -295,6 +319,7 @@ public class PatientenCRUD {
 
         if (db.connectDb()) {
             list.setItems(db.VulLijstPatienten());
+            cbxAandoeningen.getItems().addAll(db.VulLijstPatienten());
         }
     }
 

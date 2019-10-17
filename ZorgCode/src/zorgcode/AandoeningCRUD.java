@@ -17,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -41,14 +42,15 @@ public class AandoeningCRUD {
         Button BtnAanpassen = new Button("Aanpassen");
 
         Pane root = new Pane();
+        root.setStyle("-fx-background-color: #8bb3e8;");
         TerugKnop.setLayoutX(1000);
         TerugKnop.setLayoutY(600);
 
-        BtnOpslaan.setLayoutX(650);
+        BtnOpslaan.setLayoutX(500);
         BtnOpslaan.setLayoutY(200);
 
-        BtnAanpassen.setLayoutX(500);
-        BtnAanpassen.setLayoutY(200);
+        BtnAanpassen.setLayoutX(10);
+        BtnAanpassen.setLayoutY(450);
 
         ListView<EntAanDoening> list = new ListView<EntAanDoening>();
 
@@ -114,6 +116,8 @@ public class AandoeningCRUD {
                     Stage stage = new Stage();
                     stage.setTitle("Aanpassen");
                     stage.setScene(new Scene(pane, 250, 225));
+                    pane.setStyle("-fx-background-color: #A7b6FF;");
+                    stage.getIcons().add(new Image(ZorgCode.class.getResourceAsStream( "Icon/images.png" ))); 
                     stage.show();
 
                     TextField TxtNaamAanpassen = new TextField();

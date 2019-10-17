@@ -107,5 +107,16 @@ public class Patient {
             return false;
         }
     }
+    
+        public boolean DeletePatient(int id) {
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.execute("Delete from patient where Id = '" + id + "'");
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
 
 }
