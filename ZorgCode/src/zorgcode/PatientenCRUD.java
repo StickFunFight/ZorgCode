@@ -131,9 +131,11 @@ public class PatientenCRUD {
         TxtAllergieen.setPrefSize(200, 100);
         TxtAllergieen.setWrapText(true);
 
-        ComboBox<EntPatient> cbxAandoeningen = new ComboBox<EntPatient>();
+        Button BtnAandoening = new Button("Aandoening Toevoegen");
+        BtnAandoening.setLayoutX(60);
+        BtnAandoening.setLayoutY(450);
 
-        root.getChildren().addAll(cbxAandoeningen, TerugKnop, list, TxtVoorNaam, LblVoornaam, TxtAchternaam, LblAchternaam, DpGeboorteDatum, LblGeboorteDatum, TxtLengte, LblLengte, TxtGewicht, LblGewicht, LblTelefoonNummer, TxtTelefoonNummer, LblNoodNummer, TxtNoodNummer, LblExtraNoodNummer, TxtExtraNoodNummer, LblAllergieen, TxtAllergieen, BtnOpslaan, BtnWijzig);
+        root.getChildren().addAll(BtnAandoening, TerugKnop, list, TxtVoorNaam, LblVoornaam, TxtAchternaam, LblAchternaam, DpGeboorteDatum, LblGeboorteDatum, TxtLengte, LblLengte, TxtGewicht, LblGewicht, LblTelefoonNummer, TxtTelefoonNummer, LblNoodNummer, TxtNoodNummer, LblExtraNoodNummer, TxtExtraNoodNummer, LblAllergieen, TxtAllergieen, BtnOpslaan, BtnWijzig);
 
         list.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -314,12 +316,64 @@ public class PatientenCRUD {
                 }
 
             }
-        }
-        );
+        });
 
+        BtnAandoening.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    EntPatient Patient = list.getSelectionModel().getSelectedItem();
+                    int PID = Patient.getId();
+
+                    Pane pane = new Pane();
+                    Stage stage = new Stage();
+                    stage.setTitle("Aanpassen");
+                    stage.setScene(new Scene(pane, 225, 150));
+                    pane.setStyle("-fx-background-color: #A7b6FF;");
+                    stage.getIcons().add(new Image(ZorgCode.class.getResourceAsStream("Icon/images.png")));
+                    stage.show();
+
+                    Button BtnToevoegen = new Button("Wijziging opslaan");
+                    BtnToevoegen.setLayoutX(10);
+                    BtnToevoegen.setLayoutY(100);
+
+                    Label LblAandoeningen = new Label("Aandoening: ");
+                    LblAandoeningen.setLayoutX(10);
+                    LblAandoeningen.setLayoutY(10);
+
+                    Aandoening AD = new Aandoening();
+                    ComboBox<EntAanDoening> cbxAandoeningen = new ComboBox<EntAanDoening>();
+                    cbxAandoeningen.setLayoutX(100);
+                    cbxAandoeningen.setLayoutY(10);
+                    
+                    if(AD.connectDb()){
+                        cbxAandoeningen.getItems().addAll(AD.VulLijstAandoening());
+                    }
+                    
+                    pane.getChildren().addAll(LblAandoeningen,cbxAandoeningen, BtnToevoegen);
+
+                    BtnToevoegen.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                         EntAanDoening deAandoening = cbxAandoeningen.getSelectionModel().getSelectedItem();
+                            int AID = deAandoening.getId(); 
+                            db.AandoeningToevoegen(PID, AID);
+
+                            stage.close();
+                        }
+                    });
+
+                } catch (Exception e) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Selecteer een Item");
+                    alert.setContentText("Je hebt niks uit de lijst geselecteerd!");
+                    alert.showAndWait();
+                }
+
+            }
+        });
         if (db.connectDb()) {
             list.setItems(db.VulLijstPatienten());
-            cbxAandoeningen.getItems().addAll(db.VulLijstPatienten());
         }
     }
 
