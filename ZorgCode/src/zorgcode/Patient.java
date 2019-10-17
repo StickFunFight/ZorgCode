@@ -7,9 +7,12 @@ package zorgcode;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -36,6 +39,23 @@ public class Patient {
         } catch (SQLException e) {
             System.out.println(e);
             return false;
+        }
+    }
+        public ObservableList<EntPatient> VulLijstPatienten() {
+        try {
+            Statement stmt = this.conn.createStatement();
+            ObservableList<EntPatient> LijstPatienten = FXCollections.observableArrayList();
+            ResultSet rs;
+            if (stmt.execute("SELECT Voornaam,Achternaam, Id FROM patient")) {
+                rs = stmt.getResultSet();
+                while (rs.next()) {
+                    EntPatient Patient = new EntPatient(rs.getInt("Id"), rs.getString("Voornaam"), rs.getString("Achternaam") );
+                    LijstPatienten.add(Patient);
+                }
+            }
+            return LijstPatienten;
+        } catch (SQLException e) {
+            return null;
         }
     }
 }
