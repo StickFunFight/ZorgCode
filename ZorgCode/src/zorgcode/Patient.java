@@ -20,7 +20,6 @@ import javafx.collections.ObservableList;
  */
 public class Patient {
 
-    
     String Voornaam;
     String Achternaam;
     String GeboorteDatum;
@@ -30,7 +29,7 @@ public class Patient {
     String Noodnummer;
     String ExtraNoodnummer;
     String Allergieen;
-            
+
     private Connection conn;
 
     public boolean connectDb() {
@@ -72,18 +71,18 @@ public class Patient {
         }
     }
 
-    public Patient GeefPatient(int AID) {  
-    Patient patient = new Patient();
+    public Patient GeefPatient(int AID) {
+        Patient patient = new Patient();
         try {
             Statement stmt = this.conn.createStatement();
             ResultSet rs;
             if (stmt.execute("SELECT * FROM patient Where Id =" + AID)) {
                 rs = stmt.getResultSet();
                 while (rs.next()) {
-                    
+
                     patient.Voornaam = rs.getString("Voornaam");
                     patient.Achternaam = rs.getString("Achternaam");
-                    patient.GeboorteDatum = rs.getString("GeboorteDatum");    
+                    patient.GeboorteDatum = rs.getString("GeboorteDatum");
                     patient.Lengte = rs.getDouble("Lengte");
                     patient.Gewicht = rs.getDouble("Gewicht");
                     patient.Telefoonnummer = rs.getString("TelefoonNummer");
@@ -97,4 +96,16 @@ public class Patient {
             return null;
         }
     }
+
+    public boolean AanpassenPatient(int id, String Voornaam, String Achternaam, String GeboorteDatum, Double Lengte, Double Gewicht, String Telefoonnummer, String Noodnummer, String ExtraNoodnummer, String Allergieen) {
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.execute("update patient set Voornaam = '" + Voornaam + "', Achternaam = '" + Achternaam + "',GeboorteDatum = '" + GeboorteDatum + "',Lengte = " + Lengte + ", Gewicht = " + Gewicht + ",Telefoonnummer = '" + Telefoonnummer + "',Noodnummer = '" + Noodnummer + "',  ExtraNoodnummer = '" + ExtraNoodnummer + "',Allergieen = '" + Allergieen + "' where Id = " + id);
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
 }

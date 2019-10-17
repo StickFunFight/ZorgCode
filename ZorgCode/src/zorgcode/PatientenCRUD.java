@@ -133,8 +133,6 @@ public class PatientenCRUD {
             public void handle(MouseEvent event) {
                 EntPatient Patient = list.getSelectionModel().getSelectedItem();
                 int AID = Patient.getId();
-                
-                System.out.println(db.GeefPatient(AID).Voornaam);
             }
         });
 
@@ -192,12 +190,12 @@ public class PatientenCRUD {
             public void handle(ActionEvent event) {
                 try {
                     EntPatient Patient = list.getSelectionModel().getSelectedItem();
-                    int AID = Patient.getId();
+                    int PID = Patient.getId();
 
                     Pane pane = new Pane();
                     Stage stage = new Stage();
                     stage.setTitle("Aanpassen");
-                    stage.setScene(new Scene(pane, 200, 500));
+                    stage.setScene(new Scene(pane, 225, 500));
                     stage.show();
 
                     TextField AanpassenVoorNaam = new TextField();
@@ -209,57 +207,81 @@ public class PatientenCRUD {
                     TextField AanpassenNoodNummer = new TextField();
                     TextField AanpassenExtraNoodNummer = new TextField();
                     TextArea AanpassenAllergieen = new TextArea();
-                    
 
                     AanpassenVoorNaam.setLayoutX(10);
                     AanpassenVoorNaam.setLayoutY(10);
+                    AanpassenVoorNaam.setText(db.GeefPatient(PID).Voornaam);
 
                     AanpassenAchternaam.setLayoutX(10);
                     AanpassenAchternaam.setLayoutY(50);
+                    AanpassenAchternaam.setText(db.GeefPatient(PID).Achternaam);
 
                     AanpassenGeboorteDatum.setLayoutX(10);
                     AanpassenGeboorteDatum.setLayoutY(90);
+                    String Datum = db.GeefPatient(PID).GeboorteDatum;
+                    LocalDate localDate = LocalDate.parse(Datum);
+                    AanpassenGeboorteDatum.setValue(localDate);
 
                     AanpassenLengte.setLayoutX(10);
                     AanpassenLengte.setLayoutY(130);
+                    AanpassenLengte.setText("" + db.GeefPatient(PID).Lengte);
 
                     AanpassenGewicht.setLayoutX(10);
                     AanpassenGewicht.setLayoutY(170);
+                    AanpassenGewicht.setText("" + db.GeefPatient(PID).Gewicht);
 
                     AanpassenTelefoonNummer.setLayoutX(10);
                     AanpassenTelefoonNummer.setLayoutY(210);
+                    AanpassenTelefoonNummer.setText(db.GeefPatient(PID).Telefoonnummer);
 
                     AanpassenNoodNummer.setLayoutX(10);
                     AanpassenNoodNummer.setLayoutY(250);
-                    
+                    AanpassenNoodNummer.setText(db.GeefPatient(PID).Noodnummer);
+
                     AanpassenExtraNoodNummer.setPromptText("Extra Noodnummer");
                     AanpassenExtraNoodNummer.setLayoutX(10);
                     AanpassenExtraNoodNummer.setLayoutY(290);
-                    
+                    AanpassenExtraNoodNummer.setText(db.GeefPatient(PID).ExtraNoodnummer);
+
                     AanpassenAllergieen.setPromptText("Allergieën");
                     AanpassenAllergieen.setLayoutX(10);
                     AanpassenAllergieen.setLayoutY(330);
                     AanpassenAllergieen.setPrefSize(200, 100);
                     AanpassenAllergieen.setWrapText(true);
+                    AanpassenAllergieen.setText(db.GeefPatient(PID).Allergieen);
 
                     Button AanpassingOpslaan = new Button("Wijziging opslaan");
                     AanpassingOpslaan.setLayoutX(10);
-                    AanpassingOpslaan.setLayoutY(400);
+                    AanpassingOpslaan.setLayoutY(450);
 
-                    //TxtNaamAanpassen.setText(db.GeefAandoening(AID).Naam);
-                    //TxtOmschrijvingAanpassen.setText(db.GeefAandoening(AID).Omschrijving);
-                    pane.getChildren().addAll(AanpassenVoorNaam, AanpassenAchternaam,AanpassenGeboorteDatum,AanpassenLengte,AanpassenGewicht,AanpassenTelefoonNummer,AanpassenNoodNummer,AanpassenExtraNoodNummer,AanpassenAllergieen, AanpassingOpslaan);
+                    pane.getChildren().addAll(AanpassenVoorNaam, AanpassenAchternaam, AanpassenGeboorteDatum, AanpassenLengte, AanpassenGewicht, AanpassenTelefoonNummer, AanpassenNoodNummer, AanpassenExtraNoodNummer, AanpassenAllergieen, AanpassingOpslaan);
 
-//                    AanpassingOpslaan.setOnAction(new EventHandler<ActionEvent>() {
-//                        @Override
-//                        public void handle(ActionEvent event) {
-//                            String Naam = TxtNaamAanpassen.getText();
-//                            String Omschrijving = TxtOmschrijvingAanpassen.getText();
-//                            //db.AanpassenAandoening(AID, Naam, Omschrijving);
-//                            list.setItems(db.VulLijstPatienten());
-//                            stage.close();
-//                        }
-//                    });
+                    AanpassingOpslaan.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            try {
+                                String Voornaam = AanpassenVoorNaam.getText();
+                                String Achternaam = AanpassenAchternaam.getText();
+                                LocalDate LocalDate = AanpassenGeboorteDatum.getValue();
+                                String Datum = LocalDate.toString();
+                                Double Lengte = Double.parseDouble(AanpassenLengte.getText());
+                                Double Gewicht = Double.parseDouble(AanpassenGewicht.getText());
+                                String TelefoonNummer = AanpassenTelefoonNummer.getText();
+                                String NoodNummer = AanpassenNoodNummer.getText();
+                                String ExtraNoodnummer = AanpassenExtraNoodNummer.getText();
+                                String Allergieen = AanpassenAllergieen.getText();
+                                db.AanpassenPatient(PID, Voornaam, Achternaam, Datum, Lengte, Gewicht, TelefoonNummer, NoodNummer, ExtraNoodnummer, Allergieen);
+                                list.setItems(db.VulLijstPatienten());
+                                stage.close();
+
+                            } catch (Exception e) {
+                                Alert alert = new Alert(Alert.AlertType.WARNING);
+                                alert.setTitle("Er Ging iets fout");
+                                alert.setContentText("" +e);
+                                alert.showAndWait();
+                            }
+                        }
+                    });
                 } catch (Exception e) {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Selecteer een Item");
