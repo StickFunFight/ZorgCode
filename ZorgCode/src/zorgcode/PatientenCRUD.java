@@ -6,8 +6,6 @@
 package zorgcode;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -19,12 +17,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 /**
@@ -187,11 +182,7 @@ public class PatientenCRUD {
                     TxtAllergieen.clear();
 
                 } catch (Exception e) {
-
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Foutje");
-                    alert.setContentText("Er ging iets Fout Probeer het opnieuw!");
-                    alert.showAndWait();
+                PopUP(""+e);
                 }
             }
         });
@@ -293,10 +284,14 @@ public class PatientenCRUD {
                     BtnGenezen.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                            EntAanDoening deAandoening = LijstAandoeningen.getSelectionModel().getSelectedItem();
-                            int AID = deAandoening.getId();   
-                            ad.AandoeningenGenezen(AID);
-                            LijstAandoeningen.setItems((ad.AandoeningBijPersoon(PID)));
+                            try {
+                                EntAanDoening deAandoening = LijstAandoeningen.getSelectionModel().getSelectedItem();
+                                int AID = deAandoening.getId();
+                                ad.AandoeningenGenezen(AID);
+                                LijstAandoeningen.setItems((ad.AandoeningBijPersoon(PID)));
+                            } catch (Exception e) {
+                            PopUP("Selecteer een aandoening");
+                            }
                         }
                     });
 
@@ -319,10 +314,7 @@ public class PatientenCRUD {
                                 stage.close();
 
                             } catch (Exception e) {
-                                Alert alert = new Alert(Alert.AlertType.WARNING);
-                                alert.setTitle("Er Ging iets fout");
-                                alert.setContentText("" + e);
-                                alert.showAndWait();
+                            PopUP(""+e);
                             }
                         }
                     });
@@ -337,10 +329,7 @@ public class PatientenCRUD {
                     });
 
                 } catch (Exception e) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Selecteer een Item");
-                    alert.setContentText("Je hebt niks uit de lijst geselecteerd!");
-                    alert.showAndWait();
+                PopUP("Selecteer een Patient");
                 }
 
             }
@@ -363,7 +352,7 @@ public class PatientenCRUD {
                     stage.getIcons().add(new Image(ZorgCode.class.getResourceAsStream("Icon/images.png")));
                     stage.show();
 
-                    Button BtnToevoegen = new Button("Wijziging opslaan");
+                    Button BtnToevoegen = new Button("Toevoegen");
                     BtnToevoegen.setLayoutX(10);
                     BtnToevoegen.setLayoutY(100);
 
@@ -380,24 +369,24 @@ public class PatientenCRUD {
                         cbxAandoeningen.getItems().addAll(AD.VulLijstAandoening());
                     }
 
-                    pane.getChildren().addAll(LblAandoeningen, cbxAandoeningen, BtnToevoegen);
-
                     BtnToevoegen.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                            EntAanDoening deAandoening = cbxAandoeningen.getSelectionModel().getSelectedItem();
-                            int AID = deAandoening.getId();
-                            db.AandoeningToevoegen(PID, AID);
-
-                            stage.close();
+                            try {
+                                EntAanDoening deAandoening = cbxAandoeningen.getSelectionModel().getSelectedItem();
+                                int AID = deAandoening.getId();
+                                db.AandoeningToevoegen(PID, AID);
+                                stage.close();
+                            } catch (Exception e) {
+                                PopUP("Selecteer een aandoening");
+                            }
                         }
                     });
 
+                    pane.getChildren().addAll(LblAandoeningen, cbxAandoeningen, BtnToevoegen);
+
                 } catch (Exception e) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Selecteer een Item");
-                    alert.setContentText("Je hebt niks uit de lijst geselecteerd!");
-                    alert.showAndWait();
+                PopUP("Selecteer iets uit de lijst");
                 }
 
             }
@@ -405,6 +394,13 @@ public class PatientenCRUD {
         if (db.connectDb()) {
             list.setItems(db.VulLijstPatienten());
         }
+    }
+
+    public void PopUP(String Message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Er ging iets fout!");
+        alert.setContentText(Message);
+        alert.showAndWait();
     }
 
 }

@@ -96,12 +96,16 @@ public class AandoeningCRUD {
         BtnOpslaan.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                if (TxtNaam.getText() == null || TxtOmschrijving.getText().trim().isEmpty()) {
+                    PopUP("Vul alle Gegevens in");
+                }else{
                 String Naam = TxtNaam.getText();
                 String Omschrijving = TxtOmschrijving.getText();
                 db.NieuweAandoening(Naam, Omschrijving);
                 list.setItems(db.VulLijstAandoening());
                 TxtNaam.clear();
                 TxtOmschrijving.clear();
+                }
             }
         });
 
@@ -117,7 +121,7 @@ public class AandoeningCRUD {
                     stage.setTitle("Aanpassen");
                     stage.setScene(new Scene(pane, 250, 225));
                     pane.setStyle("-fx-background-color: #A7b6FF;");
-                    stage.getIcons().add(new Image(ZorgCode.class.getResourceAsStream( "Icon/images.png" ))); 
+                    stage.getIcons().add(new Image(ZorgCode.class.getResourceAsStream("Icon/images.png")));
                     stage.show();
 
                     TextField TxtNaamAanpassen = new TextField();
@@ -152,10 +156,7 @@ public class AandoeningCRUD {
                     });
 
                 } catch (Exception e) {
-                    Alert alert = new Alert(AlertType.WARNING);
-                    alert.setTitle("Selecteer een Item");
-                    alert.setContentText("Je hebt niks uit de lijst geselecteerd!");
-                    alert.showAndWait();
+                    PopUP("Selecteer iets uit de lijst");
                 }
 
             }
@@ -165,5 +166,12 @@ public class AandoeningCRUD {
         if (db.connectDb()) {
             list.setItems(db.VulLijstAandoening());
         }
+    }
+
+    public void PopUP(String Message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Er ging iets fout!");
+        alert.setContentText(Message);
+        alert.showAndWait();
     }
 }
