@@ -20,6 +20,17 @@ import javafx.collections.ObservableList;
  */
 public class Patient {
 
+    
+    String Voornaam;
+    String Achternaam;
+    String GeboorteDatum;
+    Double Lengte;
+    Double Gewicht;
+    String Telefoonnummer;
+    String Noodnummer;
+    String ExtraNoodnummer;
+    String Allergieen;
+            
     private Connection conn;
 
     public boolean connectDb() {
@@ -31,7 +42,8 @@ public class Patient {
             return false;
         }
     }
-    public boolean NieuwePatient(String Voornaam, String Achternaam, LocalDateTime GeboorteDatum, double Lengte, double Gewicht, String TelefoonNummer, String NoodNummer,  String ExtraNoodNummer, String allergieen  ) {
+
+    public boolean NieuwePatient(String Voornaam, String Achternaam, String GeboorteDatum, double Lengte, double Gewicht, String TelefoonNummer, String NoodNummer, String ExtraNoodNummer, String allergieen) {
         try {
             Statement stmt = conn.createStatement();
             stmt.execute("INSERT INTO patient VALUES (0,'" + Voornaam + "','" + Achternaam + "','" + GeboorteDatum + "','" + Lengte + "','" + Gewicht + "','" + TelefoonNummer + "','" + NoodNummer + "','" + ExtraNoodNummer + "','" + allergieen + "' )");
@@ -41,19 +53,46 @@ public class Patient {
             return false;
         }
     }
-        public ObservableList<EntPatient> VulLijstPatienten() {
+
+    public ObservableList<EntPatient> VulLijstPatienten() {
         try {
             Statement stmt = this.conn.createStatement();
             ObservableList<EntPatient> LijstPatienten = FXCollections.observableArrayList();
             ResultSet rs;
-            if (stmt.execute("SELECT Voornaam,Achternaam, Id FROM patient")) {
+            if (stmt.execute("SELECT Voornaam, Achternaam, Id FROM patient")) {
                 rs = stmt.getResultSet();
                 while (rs.next()) {
-                    EntPatient Patient = new EntPatient(rs.getInt("Id"), rs.getString("Voornaam"), rs.getString("Achternaam") );
+                    EntPatient Patient = new EntPatient(rs.getInt("Id"), rs.getString("Voornaam"), rs.getString("Achternaam"));
                     LijstPatienten.add(Patient);
                 }
             }
             return LijstPatienten;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public Patient GeefPatient(int AID) {  
+    Patient patient = new Patient();
+        try {
+            Statement stmt = this.conn.createStatement();
+            ResultSet rs;
+            if (stmt.execute("SELECT * FROM patient Where Id =" + AID)) {
+                rs = stmt.getResultSet();
+                while (rs.next()) {
+                    
+                    patient.Voornaam = rs.getString("Voornaam");
+                    patient.Achternaam = rs.getString("Achternaam");
+                    patient.GeboorteDatum = rs.getString("GeboorteDatum");    
+                    patient.Lengte = rs.getDouble("Lengte");
+                    patient.Gewicht = rs.getDouble("Gewicht");
+                    patient.Telefoonnummer = rs.getString("TelefoonNummer");
+                    patient.Noodnummer = rs.getString("NoodNummer");
+                    patient.ExtraNoodnummer = rs.getString("ExtraNoodNummer");
+                    patient.Allergieen = rs.getString("Allergieen");
+                }
+            }
+            return patient;
         } catch (SQLException e) {
             return null;
         }

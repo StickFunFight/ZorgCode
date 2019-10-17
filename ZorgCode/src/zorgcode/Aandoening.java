@@ -25,12 +25,12 @@ public class Aandoening {
     String Omschrijving;
     boolean Genezen;
 
-    Aandoening() {
-        this.id = 0;
-        this.Naam = "";
-        this.Omschrijving = "";
-        this.Genezen = false;
-    }
+//    Aandoening() {
+//        this.id = 0;
+//        this.Naam = "";
+//        this.Omschrijving = "";
+//        this.Genezen = false;
+//    }
 
     public boolean connectDb() {
         try {

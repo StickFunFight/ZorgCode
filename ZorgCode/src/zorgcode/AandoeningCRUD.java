@@ -110,10 +110,10 @@ public class AandoeningCRUD {
                     EntAanDoening deAandoening = list.getSelectionModel().getSelectedItem();
                     int AID = deAandoening.getId();
 
-                    Pane sjaak = new Pane();
+                    Pane pane = new Pane();
                     Stage stage = new Stage();
                     stage.setTitle("Aanpassen");
-                    stage.setScene(new Scene(sjaak, 250, 225));
+                    stage.setScene(new Scene(pane, 250, 225));
                     stage.show();
 
                     TextField TxtNaamAanpassen = new TextField();
@@ -134,7 +134,7 @@ public class AandoeningCRUD {
                     TxtNaamAanpassen.setText(db.GeefAandoening(AID).Naam);
                     TxtOmschrijvingAanpassen.setText(db.GeefAandoening(AID).Omschrijving);
 
-                    sjaak.getChildren().addAll(TxtNaamAanpassen, TxtOmschrijvingAanpassen, AanpassingOpslaan);
+                    pane.getChildren().addAll(TxtNaamAanpassen, TxtOmschrijvingAanpassen, AanpassingOpslaan);
 
                     AanpassingOpslaan.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
