@@ -117,7 +117,7 @@ public class AandoeningCRUD {
                     stage.setTitle("Aanpassen");
                     stage.setScene(new Scene(pane, 250, 225));
                     pane.setStyle("-fx-background-color: #A7b6FF;");
-                    stage.getIcons().add(new Image(ZorgCode.class.getResourceAsStream("Icon/images.png")));
+                    stage.getIcons().add(new Image(ZorgCode.class.getResourceAsStream("Images/Icon.png")));
                     stage.show();
 
                     TextField TxtNaamAanpassen = new TextField();

@@ -30,11 +30,12 @@ public class PatientenCRUD {
 
     Patient db = new Patient();
     Aandoening ad = new Aandoening();
+    Behandeling bh = new Behandeling();
 
     public PatientenCRUD(Stage stage, Scene scene) {
 
         Button BtnOpslaan = new Button("Opslaan");
-        Button BtnWijzig = new Button("Wijzig");
+        Button BtnMedischDossier = new Button("Dossier");
         Button TerugKnop = new Button("Terug naar hoofdpagina");
         TextField TxtVoorNaam = new TextField();
         Label LblVoornaam = new Label("Voornaam: ");
@@ -63,8 +64,8 @@ public class PatientenCRUD {
         BtnOpslaan.setLayoutX(450);
         BtnOpslaan.setLayoutY(450);
 
-        BtnWijzig.setLayoutX(10);
-        BtnWijzig.setLayoutY(450);
+        BtnMedischDossier.setLayoutX(10);
+        BtnMedischDossier.setLayoutY(450);
 
         ListView<EntPatient> list = new ListView<EntPatient>();
 
@@ -128,10 +129,10 @@ public class PatientenCRUD {
         TxtAllergieen.setWrapText(true);
 
         Button BtnAandoening = new Button("Aandoening Toevoegen");
-        BtnAandoening.setLayoutX(60);
+        BtnAandoening.setLayoutX(80);
         BtnAandoening.setLayoutY(450);
 
-        root.getChildren().addAll(BtnAandoening, TerugKnop, list, TxtVoorNaam, LblVoornaam, TxtAchternaam, LblAchternaam, DpGeboorteDatum, LblGeboorteDatum, TxtLengte, LblLengte, TxtGewicht, LblGewicht, LblTelefoonNummer, TxtTelefoonNummer, LblNoodNummer, TxtNoodNummer, LblExtraNoodNummer, TxtExtraNoodNummer, LblAllergieen, TxtAllergieen, BtnOpslaan, BtnWijzig);
+        root.getChildren().addAll(BtnAandoening, TerugKnop, list, TxtVoorNaam, LblVoornaam, TxtAchternaam, LblAchternaam, DpGeboorteDatum, LblGeboorteDatum, TxtLengte, LblLengte, TxtGewicht, LblGewicht, LblTelefoonNummer, TxtTelefoonNummer, LblNoodNummer, TxtNoodNummer, LblExtraNoodNummer, TxtExtraNoodNummer, LblAllergieen, TxtAllergieen, BtnOpslaan, BtnMedischDossier);
 
         list.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -182,7 +183,7 @@ public class PatientenCRUD {
                     TxtAllergieen.clear();
 
                 } catch (Exception e) {
-                PopUP(""+e);
+                    PopUP("" + e);
                 }
             }
         });
@@ -191,7 +192,7 @@ public class PatientenCRUD {
         //ik maak hier een nieuw scherm die ik dan open als een popup scherm
         //in dit scherm kun je een persoon wijzigen
         //je kunt er ook zijn aandoeningen inzien en deze op genezen zetten
-        BtnWijzig.setOnAction(new EventHandler<ActionEvent>() {
+        BtnMedischDossier.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 try {
@@ -202,8 +203,8 @@ public class PatientenCRUD {
                     Stage stage = new Stage();
                     stage.setTitle("Aanpassen");
                     stage.setScene(new Scene(pane, 700, 500));
-                    stage.getIcons().add(new Image(ZorgCode.class.getResourceAsStream("Icon/images.png")));
                     pane.setStyle("-fx-background-color: #A7b6FF;");
+                    stage.getIcons().add(new Image(ZorgCode.class.getResourceAsStream("Images/Icon.png")));
                     stage.show();
 
                     TextField AanpassenVoorNaam = new TextField();
@@ -279,7 +280,16 @@ public class PatientenCRUD {
                         LijstAandoeningen.setItems((ad.AandoeningBijPersoon(PID)));
                     }
 
-                    pane.getChildren().addAll(AanpassenVoorNaam, AanpassenAchternaam, AanpassenGeboorteDatum, AanpassenLengte, AanpassenGewicht, AanpassenTelefoonNummer, AanpassenNoodNummer, AanpassenExtraNoodNummer, AanpassenAllergieen, AanpassingOpslaan, BtnVerwijder, LijstAandoeningen, BtnGenezen);
+                    ListView<EntBehandeling> LijstBehandeling = new ListView<EntBehandeling>();
+                    LijstBehandeling.setLayoutX(400);
+                    LijstBehandeling.setLayoutY(200);
+                    LijstBehandeling.setPrefSize(200, 100);
+
+                    if (bh.connectDb()) {
+                        LijstBehandeling.setItems((bh.VulLijstBehandeeling(PID)));
+                    }
+
+                    pane.getChildren().addAll(AanpassenVoorNaam, AanpassenAchternaam, AanpassenGeboorteDatum, AanpassenLengte, AanpassenGewicht, AanpassenTelefoonNummer, AanpassenNoodNummer, AanpassenExtraNoodNummer, AanpassenAllergieen, AanpassingOpslaan, BtnVerwijder, LijstAandoeningen, BtnGenezen, LijstBehandeling);
 
                     BtnGenezen.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
@@ -290,7 +300,7 @@ public class PatientenCRUD {
                                 ad.AandoeningenGenezen(AID);
                                 LijstAandoeningen.setItems((ad.AandoeningBijPersoon(PID)));
                             } catch (Exception e) {
-                            PopUP("Selecteer een aandoening");
+                                PopUP("Selecteer een aandoening");
                             }
                         }
                     });
@@ -314,7 +324,7 @@ public class PatientenCRUD {
                                 stage.close();
 
                             } catch (Exception e) {
-                            PopUP(""+e);
+                                PopUP("" + e);
                             }
                         }
                     });
@@ -329,7 +339,7 @@ public class PatientenCRUD {
                     });
 
                 } catch (Exception e) {
-                PopUP("Selecteer een Patient");
+                    PopUP("Selecteer een Patient");
                 }
 
             }
@@ -347,9 +357,9 @@ public class PatientenCRUD {
                     Pane pane = new Pane();
                     Stage stage = new Stage();
                     stage.setTitle("Aanpassen");
-                    stage.setScene(new Scene(pane, 225, 150));
+                    stage.setScene(new Scene(pane, 250, 150));
+                    stage.getIcons().add(new Image(ZorgCode.class.getResourceAsStream("Images/Icon.png")));
                     pane.setStyle("-fx-background-color: #A7b6FF;");
-                    stage.getIcons().add(new Image(ZorgCode.class.getResourceAsStream("Icon/images.png")));
                     stage.show();
 
                     Button BtnToevoegen = new Button("Toevoegen");
@@ -386,7 +396,7 @@ public class PatientenCRUD {
                     pane.getChildren().addAll(LblAandoeningen, cbxAandoeningen, BtnToevoegen);
 
                 } catch (Exception e) {
-                PopUP("Selecteer iets uit de lijst");
+                    PopUP("Selecteer iets uit de lijst");
                 }
 
             }
