@@ -24,7 +24,7 @@ public class Behandeling {
     String BeginDatum;
     String EindDatum;
     int PatientId;
-    
+
     public boolean connectDb() {
         try {
             this.conn = DriverManager.getConnection("jdbc:mysql://localhost/zorgcode?" + "user=root&password=");
@@ -53,7 +53,7 @@ public class Behandeling {
             return null;
         }
     }
-    
+
     public boolean NieuweAandoening(String Naam, String Omschrijving, String Medicijn, int Hoeveelheid, String BeginDatum, String EindDatum, int PatientId) {
         try {
             Statement stmt = conn.createStatement();
@@ -64,13 +64,13 @@ public class Behandeling {
             return false;
         }
     }
-    
-       public ObservableList<EntBehandeling> VulLijstBehandeeling(int PID) {
+
+    public ObservableList<EntBehandeling> VulLijstBehandeeling(int PID) {
         try {
             Statement stmt = this.conn.createStatement();
             ObservableList<EntBehandeling> LijstBehandeling = FXCollections.observableArrayList();
             ResultSet rs;
-            if (stmt.execute("SELECT Naam,Id FROM Behandeling where PatientId ="+PID)) {
+            if (stmt.execute("SELECT Naam,Id FROM Behandeling where PatientId =" + PID)) {
                 rs = stmt.getResultSet();
                 while (rs.next()) {
                     EntBehandeling DeBehandeling = new EntBehandeling(rs.getInt("Id"), rs.getString("Naam"));
@@ -82,5 +82,4 @@ public class Behandeling {
             return null;
         }
     }
-
 }

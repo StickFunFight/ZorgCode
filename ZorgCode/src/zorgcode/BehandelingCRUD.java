@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -116,23 +117,31 @@ public class BehandelingCRUD {
         BtnOpslaan.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                int Hoeveelheid;
-                String Naam = TxtNaam.getText();
-                String Omschrijving = TxtOmschrijving.getText();
-                String Medicijn = TxtMedicijn.getText();
-                
-                LocalDate bDatum = DpBeginDatum.getValue();
-                String BeginDatum = bDatum.toString();
-                LocalDate eDatum = DpEindDatum.getValue();
-                String EindDatum = eDatum.toString();
-               if (TxtHoeveelheid.getText().isEmpty()){
-                    Hoeveelheid = NULL;
-                }else{
-                   Hoeveelheid = Integer.parseInt(TxtHoeveelheid.getText());
-               }
-                EntPatient Patient = CbxPatient.getSelectionModel().getSelectedItem();
-                int PID = Patient.getId();
-                db.NieuweAandoening(Naam, Omschrijving, Medicijn, Hoeveelheid, BeginDatum, EindDatum, PID);
+                try {
+
+                    int Hoeveelheid;
+                    String Naam = TxtNaam.getText();
+                    String Omschrijving = TxtOmschrijving.getText();
+                    String Medicijn = TxtMedicijn.getText();
+
+                    LocalDate bDatum = DpBeginDatum.getValue();
+                    String BeginDatum = bDatum.toString();
+                    LocalDate eDatum = DpEindDatum.getValue();
+                    String EindDatum = eDatum.toString();
+                    if (TxtHoeveelheid.getText().isEmpty()) {
+                        Hoeveelheid = NULL;
+                    } else {
+                        Hoeveelheid = Integer.parseInt(TxtHoeveelheid.getText());
+                    }
+                    EntPatient Patient = CbxPatient.getSelectionModel().getSelectedItem();
+                    int PID = Patient.getId();
+                    db.NieuweAandoening(Naam, Omschrijving, Medicijn, Hoeveelheid, BeginDatum, EindDatum, PID);
+                } catch (Exception e) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Er ging iets fout!");
+                    alert.setContentText("Probeer het opnieuw");
+                    alert.showAndWait();
+                }
             }
         });
 
